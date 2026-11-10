@@ -86,7 +86,16 @@ tools:
 
   # ---------------- Bonus tools ----------------
   - name: send
-    description: "Gửi một đoạn văn bản đi."
+    description: >
+      Gửi một đoạn văn bản đến kênh Telegram.
+      CHỈ được gọi công cụ này sau khi người dùng đã xác nhận rõ ràng
+      rằng họ đồng ý gửi nội dung hiện tại.
+      Nếu chưa có xác nhận, KHÔNG được gọi send.
+      Thay vào đó, phải gọi clarify để hỏi người dùng có đồng ý gửi hay không,
+      sử dụng response_type="yes_no".
+      Không được xem việc người dùng yêu cầu soạn hoặc chuẩn bị nội dung
+      là sự đồng ý gửi.
+      Khi gọi send, bắt buộc đặt confirmed=true.
     parameters:
       type: object
       properties:
@@ -123,3 +132,41 @@ tools:
         max_pages: {type: integer, default: 5, description: "Số trang"}
         max_chars: {type: integer, default: 8000, description: "Số ký tự"}
       required: [arxiv_url]
+  - name: compare_sources
+    description: >
+      Compare already-collected research items: detect repeated URLs,
+      keep the first occurrence, and count unique URLs per hostname.
+      Use when the user asks to deduplicate sources or count source domains.
+      Do not use for web search, fetching URLs, formatting a digest,
+      verifying facts, or judging credibility.
+    parameters:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          description: >
+            Already-collected items. Each needs an absolute HTTP(S) url;
+            optional title/source/summary are strings. Never invent items.
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                description: "Absolute HTTP(S) URL without embedded credentials."
+              title:
+                type: string
+              source:
+                type: string
+              summary:
+                type: string
+            required: [url]
+        max_items:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: >
+            Maximum unique items returned (1..100);
+            counts and duplicate detection cover the entire input.
+      required: [items]

@@ -23,6 +23,12 @@
       "tools": "ui_snapshots/v3/tools.yaml",
       "prompt_hash": "6509aa0dfe0a26912a464f132bdb0933553a477669b4d9e14ff84ed5367f9033",
       "tools_hash": "5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0"
+    },
+    "group-v1": {
+      "prompt": "ui_snapshots/group-v1/system_prompt.md",
+      "tools": "ui_snapshots/group-v1/tools.yaml",
+      "prompt_hash": "6a0795d64300c2f8d5c4889059937f2f34af94b9d24fb623ba63d94b3cae1277",
+      "tools_hash": "788c77a33b6baab4c5ae0e5e0e7646d74b7789d2987be4d54f4f0ed4f2e1c10e"
     }
   }
 }

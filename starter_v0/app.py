@@ -4,14 +4,13 @@ import os
 import streamlit as st
 from providers import make_provider
 from tools import TOOL_FUNCTIONS
-from ui_data import ROOT, VERSIONS, comparison_rows, latest_runs, read_runs, resolve_snapshot, tool_inventory
+from ui_data import ROOT, CHAT_VERSIONS, comparison_rows, latest_runs, read_runs, resolve_snapshot, tool_inventory
 from ui_session import DemoSession, VersionSessions, friendly_error, provider_problem, public_data
 
 st.set_page_config(page_title="Research Desk · Agent Demo", page_icon="🔎", layout="wide")
 st.markdown("""
 <style>
 .block-container {max-width: 1180px; padding-top: 2.2rem;}
-[data-testid="stSidebar"] {background: #f3f6fb;}
 h1 {letter-spacing: -0.045em;}
 .eyebrow {color: #3266c9; font-size: .75rem; font-weight: 750; letter-spacing: .18em;}
 .intro {color: #64748b; font-size: 1.05rem; line-height: 1.65;}
@@ -80,7 +79,8 @@ store: VersionSessions = st.session_state.version_sessions
 
 with st.sidebar:
     st.markdown("### 🔎 Research Desk")
-    version = st.selectbox("Phiên bản chat", VERSIONS, key="chat_version")
+    version = st.selectbox("Phiên bản chat", CHAT_VERSIONS, key="chat_version",
+                           format_func=lambda value: "group-v1 · tool mới (10/10)" if value == "group-v1" else value)
     snapshot, snapshot_error = None, None
     try:
         snapshot = resolve_snapshot(version, ROOT, selected_runs.get(version))
@@ -135,7 +135,7 @@ declarations = snapshot.declarations if snapshot else []
 inventory = tool_inventory(declarations, TOOL_FUNCTIONS, ROOT)
 with st.expander("Công cụ và mô tả"):
     st.dataframe(inventory, hide_index=True, use_container_width=True)
-    st.caption("Tool sẵn sàng khi có cả khai báo trong snapshot và implementation trong registry. compare_sources tự khả dụng sau khi nhóm tích hợp đủ hai phần.")
+    st.caption("Tool sẵn sàng khi có khai báo trong snapshot và implementation. Chọn group-v1 để dùng compare_sources; snapshot v0–v3 giữ nguyên theo run gốc.")
 
 st.subheader(f"Cuộc trò chuyện · {version}")
 can_chat = snapshot is not None and configuration_error is None

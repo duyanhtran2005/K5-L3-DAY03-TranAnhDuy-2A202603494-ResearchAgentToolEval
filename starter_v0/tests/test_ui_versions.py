@@ -10,10 +10,21 @@ import requests
 import ui_data
 import ui_session
 from providers.base import ModelResponse, ToolCall
+from tools import TOOL_FUNCTIONS
 from ui_data import comparison_rows, latest_runs, read_runs, resolve_snapshot, tool_inventory
 from ui_session import DemoSession, VersionSessions, provider_problem
 
 APP_PATH = ui_session.ROOT / "app.py"
+
+
+def test_group_v1_snapshot_matches_run_and_exposes_compare_sources():
+    snapshot = resolve_snapshot("group-v1")
+    run_path = next((ui_data.ROOT / "runs").glob("group-v1_B_group_openrouter_*.json"))
+    run = json.loads(run_path.read_text(encoding="utf-8"))
+    assert snapshot.hashes == (run["prompt_hash"], run["tools_hash"])
+    inventory = tool_inventory(snapshot.declarations, TOOL_FUNCTIONS)
+    compare = next(row for row in inventory if row["Tool"] == "compare_sources")
+    assert compare["Trạng thái"] == "Sẵn sàng"
 
 
 @pytest.fixture

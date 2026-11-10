@@ -12,6 +12,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent
 VERSIONS = ("v0", "v1", "v2", "v3")
+CHAT_VERSIONS = (*VERSIONS, "group-v1")
 METRICS = {"Pass": "case_accuracy", "Routing": "tool_routing_accuracy",
            "Arguments": "argument_accuracy", "Multi-turn": "multiturn_accuracy"}
 
@@ -121,8 +122,8 @@ def local_path(root: Path, value: str, suffixes: tuple[str, ...]) -> Path:
 
 
 def resolve_snapshot(version: str, root: Path = ROOT, run: RunRecord | None = None) -> VersionSnapshot:
-    if version not in VERSIONS:
-        raise ValueError("Chỉ hỗ trợ các phiên bản v0–v3.")
+    if version not in CHAT_VERSIONS:
+        raise ValueError("Chỉ hỗ trợ các phiên bản chat đã khai báo.")
     manifest_path = root / "ui_versions.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8-sig")) if manifest_path.exists() else {}
     if not isinstance(manifest, dict) or not isinstance(manifest.get("versions", {}), dict):

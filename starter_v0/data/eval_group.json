@@ -1,7 +1,326 @@
 {
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
-  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "description": "Group Eval gồm 10 cases do nhóm xây dựng: 5 single-turn và 5 multi-turn, bao gồm kiểm thử tool compare_sources do thành viên nhóm phát triển.",
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "G01_policy_source_citation",
+      "phase": "B",
+      "query": "Tra cứu chính sách nội bộ về yêu cầu trích dẫn nguồn trong các bài nghiên cứu AI. Chỉ lấy 3 mục thuộc nhóm source_citation.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+        {
+        "name": "policy",
+        "args": {
+          "policy_area": "source_citation",
+          "top_k": 3
+        }
+      }
+    ]
+  },
+      "metadata": {
+        "what_it_tests": "Chọn policy và truyền đúng policy_area cùng số lượng kết quả."
+      }
+    },
+    {
+      "id": "G02_papers_relevance",
+      "phase": "B",
+      "query": "Tìm 5 bài báo khoa học về ứng dụng Large Language Models trong giáo dục đại học, sắp xếp theo mức độ liên quan.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+        {
+        "name": "papers",
+        "args": {
+          "max_results": 5,
+          "sort_by": "relevance"
+        }
+      }
+    ]
+  },
+      "metadata": {
+        "what_it_tests": "Chọn papers và truyền đúng từ khóa, số lượng, tiêu chí sắp xếp."
+      }
+    },
+    {
+      "id": "G03_paper_text_url",
+      "phase": "B",
+      "query": "Lấy nội dung văn bản của bài báo tại https://arxiv.org/abs/2303.08774. Chỉ lấy tối đa 3 trang và 6000 ký tự.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "https://arxiv.org/abs/2303.08774",
+              "max_pages": 3,
+              "max_chars": 6000
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Phân biệt lấy nội dung bài báo với tìm kiếm bài báo; truyền đúng URL và giới hạn."
+      }
+    },
+    {
+      "id": "G04_format_bullets",
+      "phase": "B",
+      "query": "Trình bày hai nguồn đã thu thập dưới dạng bullet points, với tiêu đề 'AI in Education'. Items: [{\"title\":\"AI in Higher Education\",\"url\":\"https://example.com/ai-education\",\"source\":\"Example\",\"summary\":\"Applications of AI in universities.\"},{\"title\":\"LLM-based Learning\",\"url\":\"https://example.org/llm-learning\",\"source\":\"Research\",\"summary\":\"Using language models to support learning.\"}]",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "items": [
+                {
+                  "title": "AI in Higher Education",
+                  "url": "https://example.com/ai-education",
+                  "source": "Example",
+                  "summary": "Applications of AI in universities."
+                },
+                {
+                  "title": "LLM-based Learning",
+                  "url": "https://example.org/llm-learning",
+                  "source": "Research",
+                  "summary": "Using language models to support learning."
+                }
+              ],
+              "template": "bullets",
+              "headline": "AI in Education"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Chọn format thay vì công cụ tìm kiếm; giữ nguyên dữ liệu đầu vào và chọn đúng template."
+      }
+    },
+    {
+      "id": "G05_compare_sources_single",
+      "phase": "B",
+      "query": "Compare these already-collected sources: remove repeated URLs and count unique URLs per hostname. Return at most 2 unique items. Items: [{\"url\":\"https://example.com/a#intro\"},{\"url\":\"https://example.com/a#results\"},{\"url\":\"https://other.org/b\"}]. Do not search the web or fetch the pages.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "compare_sources",
+            "args": {
+              "items": [
+                {
+                  "url": "https://example.com/a#intro"
+                },
+                {
+                  "url": "https://example.com/a#results"
+                },
+                {
+                  "url": "https://other.org/b"
+                }
+              ],
+              "max_items": 2
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Kiểm tra tool compare_sources; phân biệt so sánh URL đã thu thập với lookup hoặc fetch; giữ nguyên URL và giới hạn."
+      }
+    },
+    {
+      "id": "G06_policy_multiturn_scope",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tra cứu chính sách nội bộ về các quy định liên quan đến AI research và data privacy."
+        },
+        {
+          "role": "user",
+          "content": "Chỉ tập trung vào data privacy."
+        },
+        {
+          "role": "user",
+          "content": "Lấy 2 mục thôi."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+          "expect": {
+      "tool_calls": [
+        {
+          "name": "policy",
+          "args": {
+            "policy_area": "data_privacy",
+            "top_k": 2
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "what_it_tests": "Giữ truy vấn ban đầu, cập nhật phạm vi chính sách và số lượng kết quả"
+    }
+  },
+    {
+      "id": "G07_papers_multiturn_sort",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm bài báo khoa học về AI literacy in higher education."
+        },
+        {
+          "role": "user",
+          "content": "Chỉ lấy 3 bài."
+        },
+        {
+          "role": "user",
+          "content": "Sắp xếp theo thời gian cập nhật mới nhất."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "papers",
+            "args": {
+              "query": "AI literacy in higher education",
+              "max_results": 3,
+              "sort_by": "lastUpdatedDate"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Duy trì từ khóa tìm kiếm, cập nhật max_results và ánh xạ yêu cầu mới nhất sang lastUpdatedDate."
+      }
+    },
+    {
+      "id": "G08_paper_text_multiturn_pages",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Lấy nội dung bài báo tại https://arxiv.org/abs/2303.08774."
+        },
+        {
+          "role": "user",
+          "content": "Chỉ cần tối đa 5 trang."
+        },
+        {
+          "role": "user",
+          "content": "Điều chỉnh còn 2 trang và tối đa 4000 ký tự."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "paper_text",
+            "args": {
+              "arxiv_url": "https://arxiv.org/abs/2303.08774",
+              "max_pages": 2,
+              "max_chars": 4000
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Giữ URL bài báo qua nhiều lượt và ưu tiên các giới hạn mới nhất do người dùng yêu cầu."
+      }
+    },
+    {
+      "id": "G09_format_multiturn_template",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Trình bày các nguồn sau theo dạng sections. Items: [{\"title\":\"AI in Higher Education\",\"url\":\"https://example.com/ai-education\",\"source\":\"Example\",\"summary\":\"Applications of AI in universities.\"},{\"title\":\"LLM-based Learning\",\"url\":\"https://example.org/llm-learning\",\"source\":\"Research\",\"summary\":\"Using language models to support learning.\"}]"
+        },
+        {
+          "role": "user",
+          "content": "Đổi sang dạng bullets."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "format",
+            "args": {
+              "items": [
+                {
+                  "title": "AI in Higher Education",
+                  "url": "https://example.com/ai-education",
+                  "source": "Example",
+                  "summary": "Applications of AI in universities."
+                },
+                {
+                  "title": "LLM-based Learning",
+                  "url": "https://example.org/llm-learning",
+                  "source": "Research",
+                  "summary": "Using language models to support learning."
+                }
+              ],
+              "template": "bullets"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Giữ dữ liệu nguồn từ lượt trước và cập nhật template theo yêu cầu mới nhất."
+      }
+    },
+    {
+      "id": "G10_compare_sources_multiturn_limit",
+      "phase": "B",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Compare these already-collected sources and remove repeated URLs. Items: [{\"url\":\"https://example.com/research#part1\"},{\"url\":\"https://example.com/research#part2\"},{\"url\":\"https://another.org/paper\"}]. Do not search the web or fetch the pages."
+        },
+        {
+          "role": "user",
+          "content": "Return at most 3 unique items."
+        },
+        {
+          "role": "user",
+          "content": "Actually, limit the returned items to 1."
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "compare_sources",
+            "args": {
+              "items": [
+                {
+                  "url": "https://example.com/research#part1"
+                },
+                {
+                  "url": "https://example.com/research#part2"
+                },
+                {
+                  "url": "https://another.org/paper"
+                }
+              ],
+              "max_items": 1
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Kiểm tra compare_sources trong hội thoại nhiều lượt; giữ danh sách URL ban đầu và áp dụng giới hạn mới nhất."
+      }
+    }
+  ]
 }

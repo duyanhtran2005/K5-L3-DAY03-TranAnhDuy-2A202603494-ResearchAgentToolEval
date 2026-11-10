@@ -6,4 +6,3 @@ __pycache__/
 .env.*
 !.env.example
 arxiv_papers/
-runs/

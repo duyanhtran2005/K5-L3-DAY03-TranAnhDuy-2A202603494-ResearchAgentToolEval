@@ -1,6 +1,7 @@
 """Behavior checks for multi-turn UI sessions; no model or network calls."""
 from __future__ import annotations
 
+import io
 import json
 from pathlib import Path
 
@@ -24,6 +25,43 @@ class ScriptedProvider:
         if isinstance(response, Exception):
             raise response
         return response
+
+
+@pytest.mark.parametrize("encoding", ["cp1252", "ascii"])
+def test_ui_executes_tools_and_saves_unicode_with_legacy_stdout(tmp_path, monkeypatch, encoding):
+    question = "Bạn muốn đọc bài nào? 🔎"
+    provider = ScriptedProvider(ModelResponse(tool_calls=[
+        ToolCall("clarify", {"question": question}),
+    ]))
+    session = DemoSession(provider=provider, transcripts_dir=tmp_path)
+    output = io.TextIOWrapper(io.BytesIO(), encoding=encoding, errors="strict")
+    with monkeypatch.context() as patch:
+        patch.setattr("sys.stdout", output)
+        turn = session.submit("Tóm tắt bài viết giúp tôi 🔧")
+    assert turn["status"] == "waiting_for_user"
+    assert turn["assistant_text"] == question
+    assert turn["tool_events"][0]["tool"] == "clarify"
+    saved = json.loads(session.path.read_text(encoding="utf-8"))
+    assert saved["turns"][0]["assistant_text"] == question
+
+
+def test_cli_tool_log_handles_unicode_on_legacy_stdout(monkeypatch):
+    from chat import run_model_tool_loop
+
+    question = "Bạn muốn đọc bài nào? 🔧"
+    provider = ScriptedProvider(ModelResponse(tool_calls=[
+        ToolCall("clarify", {"question": question}),
+    ]))
+    buffer = io.BytesIO()
+    output = io.TextIOWrapper(buffer, encoding="cp1252", errors="strict")
+    with monkeypatch.context() as patch:
+        patch.setattr("sys.stdout", output)
+        result = run_model_tool_loop(provider=provider, messages=[], tools=[], model=None, max_tool_rounds=1)
+        output.flush()
+    assert result["status"] == "waiting_for_user"
+    assert result["assistant_text"] == question
+    log = buffer.getvalue().decode("ascii").strip().removeprefix("TOOL_CALL ")
+    assert json.loads(log)["args"]["question"] == question
 
 
 def test_clarification_followup_uses_history_and_saves_full_transcript(tmp_path):
@@ -144,6 +182,7 @@ def test_missing_telegram_configuration_keeps_draft_pending(tmp_path):
 def test_streamlit_chat_and_new_conversation(tmp_path, monkeypatch):
     AppTest = pytest.importorskip("streamlit.testing.v1", reason="Install requirements-ui.txt for UI checks").AppTest
     real_session = DemoSession
+    monkeypatch.setenv("GEMINI_API_KEY", "fake-gemini-key")
     provider = ScriptedProvider(
         ModelResponse(tool_calls=[ToolCall("clarify", {"question": "Bạn muốn đọc URL nào?"})]),
         ModelResponse(text="Tôi đã nhận URL ở lượt tiếp theo."),
@@ -159,9 +198,9 @@ def test_streamlit_chat_and_new_conversation(tmp_path, monkeypatch):
     app.chat_input[0].set_value("https://example.com/article").run(timeout=15)
     assert not app.exception
     assert len(app.chat_message) == 4
-    transcript_path = app.session_state["demo_session"].path
+    transcript_path = app.session_state["version_sessions"].sessions["v0"].path
     assert len(json.loads(transcript_path.read_text(encoding="utf-8"))["turns"]) == 2
-    app.sidebar.button[0].click().run(timeout=15)
+    app.button(key="new_conversation").click().run(timeout=15)
     assert not app.exception
     assert len(app.chat_message) == 0
     assert transcript_path.exists()

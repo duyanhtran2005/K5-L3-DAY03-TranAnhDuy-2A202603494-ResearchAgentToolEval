@@ -1,0 +1,13 @@
+{
+  "versions": {
+    "v0": {
+      "prompt": "ui_snapshots/v0/system_prompt.md",
+      "tools": "ui_snapshots/v0/tools.yaml",
+      "prompt_hash": "eb1c8179815bd79d34de7d326420bb99b3072e6e8ae96464c02d4411f905fc68",
+      "tools_hash": "5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0"
+    },
+    "v1": null,
+    "v2": null,
+    "v3": null
+  }
+}

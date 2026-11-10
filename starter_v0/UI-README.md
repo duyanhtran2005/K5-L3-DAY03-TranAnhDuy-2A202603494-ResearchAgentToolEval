@@ -1,72 +1,118 @@
-# UI demo — Step 5: Chat Live
+# Research Desk — UI demo theo version
 
-UI dùng lại `run_model_tool_loop` của `chat.py`, đọc prompt và tool declaration trong `artifacts/`, và lưu từng lượt vào `transcripts/*.transcript.json`. Mỗi người mở UI có phiên riêng; cuộc trò chuyện mới tạo transcript mới. Không sửa code agent, provider, prompt hoặc tool của nhóm.
+UI đọc run JSON và snapshot của nhóm, giữ lịch sử riêng cho v0–v3, hiển thị lời gọi tool và xuất transcript. UI không viết vào runs/, version_log.csv, artifacts/system_prompt.md, artifacts/tools.yaml hoặc tools/.
 
-## Chạy trên Windows PowerShell
+## Chạy demo
 
 Từ thư mục gốc repository:
 
-```powershell
+~~~powershell
 cd starter_v0
 python -m pip install -r requirements-ui.txt
-python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501 --browser.gatherUsageStats false
-```
+python -X utf8 -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501 --browser.gatherUsageStats false
+~~~
 
-Mở http://localhost:8501. Gemini được chọn mặc định; các provider khác có thể chọn ở thanh bên. Key được đọc từ `.env` trên máy chạy server. Không nhập key trong chat, không commit `.env`.
+Mở http://localhost:8501. Nếu chạy server từ môi trường giới hạn mạng, cần cho tiến trình Streamlit quyền kết nối Internet. Key lấy từ .env trên máy chủ; khởi động lại server sau khi đổi .env. Không nhập key vào chat.
 
-Đặt nhãn phiên bản đúng với prompt/tools đang dùng (mặc định `v0`). Phiên chat giữ nguyên prompt, tools, model và hash từ lúc bắt đầu; chọn **Cuộc trò chuyện mới** để dùng cấu hình hoặc prompt mới.
+## 1. So sánh Pass / Routing / Arguments / Multi-turn
 
-## Thử theo Step 5
+Bảng đọc các file runs/**/*.json, chỉ nhận phiên bản v0, v1, v2, v3. Bộ chọn tách theo suite, provider, model và dataset để không trộn các phép đánh giá khác nhau. Trong mỗi bộ, lấy run mới nhất theo generated_at, dùng tên file làm tiêu chí phụ khi thời gian bằng nhau.
 
-Thực hiện lần lượt trong cùng một cuộc trò chuyện:
+| Cột UI | summary trong run JSON |
+|---|---|
+| Pass | case_accuracy |
+| Routing | tool_routing_accuracy |
+| Arguments | argument_accuracy |
+| Multi-turn | multiturn_accuracy |
 
-1. Nghiên cứu thông thường: “Tìm 3 tin tức AI nổi bật hôm nay, kèm liên kết nguồn.”
-2. Thiếu thông tin: “Tóm tắt bài viết này giúp tôi.” Quan sát agent có hỏi URL hay tự đoán.
-3. Bổ sung thông tin: “URL là https://www.python.org/about/.” Quan sát agent có dùng ngữ cảnh để đọc URL.
-4. Thử hành động: “Gửi bản tin ‘Đây là bản tin demo của nhóm’ lên Telegram.”
+Các tỷ lệ được hiển thị thành phần trăm. Giá trị thiếu, null hoặc chưa có case đo được hiển thị “—”; số 0 hợp lệ hiển thị 0.00%. Bảng cũng ghi số case đã đo/tổng số case, lỗi provider và file nguồn. “Hiện nguồn số liệu” mở summary, timestamp và hash của từng run. JSON lỗi được báo riêng, không làm mất các run đọc được.
 
-Prompt starter cố tình có hướng dẫn xấu, nên agent có thể đoán URL ở lượt 2. Ghi nhận hành vi thật trong transcript; tối ưu prompt là phần việc riêng của các vòng v1–v3.
+Hiện nhánh UI chưa có run thật v0–v3. Chỉ cần nhóm bổ sung file vào runs/ rồi tải lại trang; UI không tạo số liệu mẫu trong thư mục này.
 
-Khi model yêu cầu gọi `send`, UI chặn thực thi để hiện bản nháp; người dùng phải bấm **Xác nhận gửi Telegram** mới gửi thật. `ui_action_gate` lưu lời gọi gốc của model và quyết định của người dùng, phân biệt với các lời gọi tool thực thi. Nếu model yêu cầu nhiều tool cùng lượt với `send`, lượt đó được tạm dừng tại cổng xác nhận, chưa thực thi các tool cùng lượt. Mỗi lần chỉ xử lý bản nháp gửi đầu tiên. Khi chưa có `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`, nút gửi bị vô hiệu hóa, vẫn có thể thử và hủy bản nháp. Đây là cơ chế của UI, không phải bằng chứng rằng prompt đã xử lý xác nhận đúng.
+## 2. Snapshot và lịch sử riêng cho từng version
 
-Mở phần chi tiết dưới câu trả lời để xem tool, args, kết quả và lỗi. Dùng **Tải transcript JSON** để lấy bằng chứng cho REPORT B4; bản sao cũng được lưu trên server. Các lỗi tool vẫn được ghi nhận, không được coi là nghiên cứu thành công.
+ui_versions.json ánh xạ phiên bản tới prompt và tool declaration. Ví dụ mục v2:
 
-CLI của đề vẫn dùng được:
+~~~json
+{
+  "prompt": "artifacts/versions/v2/system_prompt.md",
+  "tools": "artifacts/versions/v2/tools.yaml",
+  "prompt_hash": "<SHA-256 của đúng file prompt, nếu có>",
+  "tools_hash": "<SHA-256 của đúng file tools, nếu có>"
+}
+~~~
 
-```powershell
-python chat.py --provider gemini --version v0
-```
+Điền object đó vào versions.v2; hash là tùy chọn, bỏ hai field hash nếu chưa cung cấp (không giữ chuỗi minh họa). Đường dẫn tính từ starter_v0. UI kiểm tra hash do run JSON cung cấp ngay cả khi cấu hình không ghi hash. Nếu không khớp, phiên bản đó bị khóa chat và báo cần đúng snapshot đã đánh giá.
 
-## Mở link cho nhóm khác bằng Cloudflare Tunnel
+Khi mục cấu hình là null hoặc chưa có, UI tìm theo thứ tự:
 
-Giữ terminal Streamlit đang chạy, mở terminal PowerShell thứ hai:
+1. artifacts/versions/vN/system_prompt.md và tools.yaml.
+2. artifacts/snapshots/vN/system_prompt.md và tools.yaml.
+3. ui_snapshots/vN/system_prompt.md và tools.yaml.
+4. Đường dẫn system_prompt/tools trong run JSON, chỉ khi run có cả prompt_hash và tools_hash, và file hiện có khớp hai hash đó.
 
-```powershell
-winget install --id Cloudflare.cloudflared --exact
-```
+Đường dẫn từ checkout của máy khác được chuyển về starter_v0 hiện tại. Không dùng đường dẫn ra ngoài thư mục lab. Một đường dẫn tới prompt đang được sửa không đủ để đại diện cho version cũ: phải khớp hash hoặc có bản snapshot riêng.
 
-Sau khi cài, mở terminal mới nếu chưa nhận lệnh, rồi chạy:
+v0 hiện có bản sao chính xác từng byte của prompt/tools gốc trong ui_snapshots/v0/. .gitattributes tại ui_snapshots giữ nguyên byte khi commit, để không đổi hash do xuống dòng. Đây là snapshot thật của bộ khung; v1–v3 chưa có snapshot, vì vậy UI báo thiếu thay vì gắn nhãn mới lên prompt v0. Không sửa các snapshot cũ để làm khớp điểm đánh giá; cung cấp bản đã dùng khi chạy eval.
 
-```powershell
-cloudflared tunnel --url http://127.0.0.1:8501
-```
+Mỗi phiên chat giữ cố định nội dung snapshot, hai hash, provider và model lúc tạo:
 
-Copy URL `https://<random>.trycloudflare.com` vào REPORT Phần A. Giữ cả Streamlit và cloudflared chạy trong buổi demo; dừng bằng Ctrl+C. Link ngừng hoạt động khi tunnel tắt. Khách dùng tài nguyên API của máy chủ demo; chỉ chia sẻ link cho người tham gia buổi lab.
+- v0 → v2 → v0: lịch sử và bản nháp v0 vẫn còn.
+- “Cuộc trò chuyện mới” chỉ bỏ phiên của version đang chọn; transcript đã lưu vẫn còn trên ổ đĩa.
+- Đổi provider/model cho version đang chọn: bắt đầu phiên mới, không đưa lịch sử cũ sang model mới.
+- Nếu đổi cấu hình khi có bản nháp gửi, UI hủy bản nháp và ghi lý do vào transcript trước khi tạo phiên mới.
+- Lịch sử trong giao diện tồn tại trong phiên trình duyệt; khởi động lại server hoặc tạo phiên trình duyệt mới không tự phục hồi file transcript.
 
-Nếu mạng chặn QUIC/UDP, thử:
+## 3. Danh sách tool và các nút thử nhanh
 
-```powershell
+“Công cụ và mô tả” liệt kê các tool có sẵn, tool mới trong khai báo/registry, compare_sources và các bonus tool. Trạng thái “Sẵn sàng” yêu cầu có cả khai báo trong snapshot đang chọn và implementation trong TOOL_FUNCTIONS. UI không tự thêm hoặc sửa tool của nhóm.
+
+compare_sources hiện được giới thiệu với đúng chức năng đối chiếu URL trùng và thống kê hostname, không chấm độ tin cậy. Khi nhóm tích hợp code + registry + khai báo vào snapshot thích hợp, nút thử sẽ tự bật sau khi khởi động lại server.
+
+Các nút policy, papers, paper_text, lookup, compare_sources, send gửi câu hỏi mẫu đến agent. Chúng không gọi thẳng tool; phần chi tiết cho biết model có chọn đúng tool hay không.
+
+## 4. Telegram: bản nháp, xác nhận, hủy
+
+Model yêu cầu send (kể cả tự đặt confirmed=true) sẽ bị dừng trước khi thực thi. UI hiện đúng văn bản bản nháp; chỉ nút “Xác nhận gửi Telegram” mới gọi hàm gửi với confirmed=True. Bấm “Hủy gửi” không gọi mạng.
+
+Khi thiếu TELEGRAM_BOT_TOKEN hoặc TELEGRAM_CHAT_ID, vẫn có thể xem và hủy bản nháp; nút xác nhận bị khóa. Nếu model yêu cầu nhiều tool cùng lượt có send, UI tạm dừng toàn bộ lượt đó và chỉ xử lý bản nháp gửi đầu tiên. Các lời gọi gốc được ghi trong ui_action_gate.requested_tool_calls; lời gọi gửi thực tế được đánh dấu origin=ui_confirmation.
+
+Token Telegram và các key đã cấu hình được che trước khi hiển thị/lưu/xuất transcript, gồm cả token trong thông báo lỗi. Bản nháp đã che thông tin bí mật cũng chính là nội dung được gửi sau khi xác nhận.
+
+## 5. Provider / model và thông báo lỗi
+
+Hỗ trợ Gemini, OpenRouter, Ollama, OpenAI và Anthropic bằng adapter có sẵn. Khi để trống model, UI hiển thị chính xác tên mặc định sẽ gửi tới provider. Sau khi có phản hồi, “Model phản hồi thực tế” hiển thị model/model_version do API trả về nếu có. Transcript ghi requested_model, actual_model và actual_models của từng lượt; khi API không cung cấp tên thực tế, UI giữ thông tin model yêu cầu, không tự suy đoán alias.
+
+Thiếu key sẽ được báo ngay trong thanh bên và khóa gửi câu hỏi. Với Ollama, nút “Kiểm tra Ollama” gọi endpoint /models tại OLLAMA_BASE_URL (mặc định http://localhost:11434/v1); trước lượt chat thật cũng kiểm tra kết nối. Nếu Ollama chưa chạy, UI hướng dẫn chạy ollama serve. Lỗi model chưa tải, 429 hết quota, 503 quá tải, xác thực và chặn mạng được giải thích riêng.
+
+## 6. Chi tiết xử lý và transcript
+
+Mỗi câu trả lời có mục “Chi tiết xử lý” gồm tool calls, arguments, kết quả/lỗi, model thực tế và quyết định xác nhận gửi. Tải transcript JSON của version đang chọn ở thanh bên; bản sao cũng được lưu trong transcripts/*.transcript.json, kèm snapshot source và hash cho report.
+
+## Chia sẻ bằng Cloudflare Tunnel
+
+Giữ Streamlit chạy; ở terminal khác:
+
+~~~powershell
 cloudflared tunnel --protocol http2 --url http://127.0.0.1:8501
-```
+~~~
 
-Tham khảo: [Quick Tunnels của Cloudflare](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/), [Streamlit AppTest](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest).
+Nếu chưa cài:
 
-## Kiểm tra offline và gộp nhánh
+~~~powershell
+winget install --id Cloudflare.cloudflared --exact
+~~~
 
-```powershell
-python -m pytest tests/test_ui_demo.py -q
-```
+Mở terminal mới nếu Windows chưa nhận lệnh. Dùng URL trycloudflare.com trả về cho buổi demo; link tồn tại khi máy và hai tiến trình còn chạy. Khách dùng tài nguyên API của máy chủ demo.
 
-Test UI cần dependencies trong `requirements-ui.txt`; dùng fake provider và mock tool, không gọi model hoặc API thật.
+## Kiểm tra và gộp nhánh
 
-Các file triển khai riêng: `app.py`, `ui_session.py`, `requirements-ui.txt`, `UI-README.md`, `tests/test_ui_demo.py`. Khi gộp, dùng các file này cùng nhau; không cần thay `requirements.txt` hay `chat.py`. Nếu prompt/tool của nhánh chính thay đổi, UI đọc lại ở cuộc trò chuyện mới.
+~~~powershell
+python -m pytest tests/test_ui_demo.py tests/test_ui_versions.py -q
+~~~
+
+Kiểm tra offline bằng fake provider và dữ liệu tạm gồm: chọn đúng snapshot, đối chiếu hash, bảng số liệu, đổi version/provider/model, nút bonus, lỗi cấu hình/Ollama, xác nhận/hủy Telegram, che token và Unicode trên Windows. Không gọi API trả phí hoặc gửi Telegram thật trong test.
+
+Các file cần gộp: app.py, ui_session.py, ui_data.py, ui_versions.json, ui_snapshots/, requirements-ui.txt, UI-README.md, tests/test_ui_demo.py, tests/test_ui_versions.py. Giữ thay đổi sửa Unicode trước đó ở chat.py (tham số log_tool_calls); phần nâng cấp này không cần thay đổi thêm agent, provider, prompt, tool, run hay version log của nhóm.
+
+Tham khảo: [Streamlit AppTest](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest), [Cloudflare Quick Tunnels](https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/).

@@ -84,6 +84,7 @@ def run_model_tool_loop(
     tools: list[dict[str, Any]],
     model: str | None,
     max_tool_rounds: int,
+    log_tool_calls: bool = True,
 ) -> dict[str, Any]:
     working_messages = list(messages)
     rounds: list[dict[str, Any]] = []
@@ -112,7 +113,12 @@ def run_model_tool_loop(
         non_clarification_events: list[dict[str, Any]] = []
 
         for call in calls:
-            print(f"🔧 {call.name}({json.dumps(call.args, ensure_ascii=False, sort_keys=True)})")
+            if log_tool_calls:
+                # Windows redirected stdout may use a legacy code page.
+                # Keep console diagnostics ASCII; transcripts remain UTF-8.
+                print("TOOL_CALL " + json.dumps(
+                    {"name": call.name, "args": call.args}, ensure_ascii=True, sort_keys=True,
+                ))
             event = execute_tool_call(call)
             round_record["tool_results"].append(event)
             all_tool_events.append(event)

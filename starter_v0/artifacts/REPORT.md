@@ -14,11 +14,13 @@
 
 Research Agent là trợ lý AI hỗ trợ tìm thông tin trên web và Twitter/X, đọc nội dung từ URL, và tổng hợp dữ liệu thành bản tin có liên kết nguồn. Bộ công cụ còn hỗ trợ tra cứu chính sách nội bộ, tìm và đọc bài báo arXiv, cùng chức năng gửi bản tin lên Telegram khi được người dùng xác nhận.
 
-**Trạng thái hiện tại:** đã kiểm tra thành công kết nối Gemini và khả năng tạo lời gọi tool `timeline`. Các chức năng dùng dịch vụ ngoài cần được cấu hình API tương ứng và kiểm thử thực tế; kết quả đánh giá sẽ được bổ sung ở Phần B.
+**Trạng thái hiện tại:** đã có UI Streamlit và chạy 4 lượt kiểm tra Step 5 bằng Gemini thật, lưu transcript JSON. Agent đọc được URL và tạo bản tóm tắt; một số lượt gặp lỗi Gemini 503 và prompt gốc còn tự đoán URL khi thiếu thông tin (chi tiết B4). Telegram chưa cấu hình; UI hỗ trợ xem và hủy bản nháp trước khi gửi.
 
 **Link dùng thử (deploy):**
 
-Chưa cung cấp; sẽ bổ sung URL sau khi triển khai giao diện demo.
+[Mở Research Desk Demo](https://partnership-vacation-spouse-batman.trycloudflare.com)
+
+UI Streamlit chạy qua Cloudflare Quick Tunnel; đã kiểm tra trang chủ và endpoint health đều trả HTTP 200. Link tạm thời, chỉ hoạt động khi máy demo cùng Streamlit và cloudflared còn chạy. Địa chỉ local: http://localhost:8501. Hướng dẫn khởi động lại: `UI-README.md`.
 
 ## A2. Tool agent có
 
@@ -80,9 +82,14 @@ List the 10 cases added to `data/eval_group.json` (5 single turn + 5 multi turn)
 
 Use `transcripts/*.transcript.json`.
 
+Kiểm tra qua adapter hội thoại của UI, dùng lại vòng xử lý của `chat.py`, với Gemini / `gemini-3.5-flash`. Bằng chứng: `transcripts/v0-step5-demo_gemini_ui_8c8e838bd3eb409681c76a11fc63c0d6.transcript.json`. Artifact: `v0-step5-demo+peb1c8179815b+t5b22a2476d41` (prompt/tools gốc, chưa phải bản tối ưu v3).
+
 | Turn | User Request | Tool Calls | Version Evidence | Outcome |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 1 | Tìm 2 tin tức AI nổi bật hôm nay, kèm nguồn. | `lookup` | `v0-step5-demo`, lượt 1 | Tool trả 5 kết quả; Gemini trả 503 khi tạo câu trả lời tiếp theo. Chưa hoàn thành yêu cầu. |
+| 2 | Tóm tắt bài viết này giúp tôi. | `fetch` với URL OpenAI do model tự đoán | `v0-step5-demo`, lượt 2 | Sai hành vi khi thiếu URL: không hỏi lại; sau khi đọc trang thì Gemini trả 503. |
+| 3 | URL bài viết là https://www.python.org/about/. | `fetch` → `format` | `v0-step5-demo`, lượt 3 | Đọc đúng URL và trả bản tóm tắt có liên kết nguồn. |
+| 4 | Gửi bản tin “Đây là bản tin demo của nhóm” lên Telegram. | Model yêu cầu `send`; UI dừng trước khi thực thi | `v0-step5-demo`, lượt 4, `ui_action_gate` | Hiện bản nháp rồi hủy trong lượt kiểm tra; không gửi tin. Cơ chế xác nhận thuộc UI, không chứng minh prompt đã biết hỏi xác nhận. |
 
 ## B5. Bonus Evidence
 
@@ -92,7 +99,7 @@ Only fill if your team did bonus.
 |---|---|---|---|
 | send (Telegram) |  |  |  |
 | arXiv/company policy |  |  |  |
-| UI |  |  |  |
+| UI | `app.py`, `ui_session.py`, `UI-README.md`; link Phần A | Chat nhiều lượt, xem tool, lưu/tải transcript; 8 test UI/session offline đạt; public HTTP 200 | Mỗi người có phiên riêng; gửi Telegram phải bấm xác nhận; link tunnel tồn tại theo tiến trình demo. |
 | Tool unit tests (`tests/`) | `pytest` output |  |  |
 
 Tool unit tests: số test đã viết, số bug tìm được trong tool có sẵn (nếu có), và một ví dụ lỗi mà unit test bắt được nhưng eval không bắt được.

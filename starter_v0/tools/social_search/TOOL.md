@@ -11,3 +11,8 @@ side_effect: false
 # social_search
 
 Searches posts by keyword. `search_type` orders results (`Latest` or `Top`).
+
+## Input boundary regression
+
+limit must be positive. Zero and negative values return a ValueError dictionary
+before HTTP; integer strings such as "3" remain supported.

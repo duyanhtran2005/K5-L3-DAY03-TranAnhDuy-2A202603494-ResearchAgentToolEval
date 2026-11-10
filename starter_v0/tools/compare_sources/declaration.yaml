@@ -1,0 +1,26 @@
+tools:
+  # Team-added local tool: no network or credentials required.
+  - name: compare_sources
+    description: "Compare already-collected research items: detect repeated URLs, keep the first occurrence, and count unique URLs per hostname. Use when the user asks to deduplicate sources or count source domains. Do not use for web search, fetching URLs, formatting a digest, verifying facts, or judging credibility."
+    parameters:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          description: "Already-collected items. Each needs an absolute HTTP(S) url; optional title/source/summary are strings. Never invent items."
+          items:
+            type: object
+            properties:
+              url: {type: string, description: "Absolute HTTP(S) URL without embedded credentials."}
+              title: {type: string}
+              source: {type: string}
+              summary: {type: string}
+            required: [url]
+        max_items:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: "Maximum unique items returned (1..100); counts and duplicate detection cover the entire input."
+      required: [items]

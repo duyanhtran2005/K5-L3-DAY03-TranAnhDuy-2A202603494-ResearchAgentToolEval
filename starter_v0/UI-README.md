@@ -27,7 +27,7 @@ Bảng đọc các file runs/**/*.json, chỉ nhận phiên bản v0, v1, v2, v3
 
 Các tỷ lệ được hiển thị thành phần trăm. Giá trị thiếu, null hoặc chưa có case đo được hiển thị “—”; số 0 hợp lệ hiển thị 0.00%. Bảng cũng ghi số case đã đo/tổng số case, lỗi provider và file nguồn. “Hiện nguồn số liệu” mở summary, timestamp và hash của từng run. JSON lỗi được báo riêng, không làm mất các run đọc được.
 
-Hiện nhánh UI chưa có run thật v0–v3. Chỉ cần nhóm bổ sung file vào runs/ rồi tải lại trang; UI không tạo số liệu mẫu trong thư mục này.
+Sau khi lấy dữ liệu từ main, UI đã đọc được các run thật v0–v3 của suite base, provider OpenRouter, model openai/gpt-4o-mini. Các run group-v1–group-v4 là bộ phiên bản khác, không được gắn nhãn thành v0–v3. Khi nhóm bổ sung run v0–v3 mới vào runs/, tải lại trang để cập nhật bảng.
 
 ## 2. Snapshot và lịch sử riêng cho từng version
 
@@ -53,7 +53,7 @@ Khi mục cấu hình là null hoặc chưa có, UI tìm theo thứ tự:
 
 Đường dẫn từ checkout của máy khác được chuyển về starter_v0 hiện tại. Không dùng đường dẫn ra ngoài thư mục lab. Một đường dẫn tới prompt đang được sửa không đủ để đại diện cho version cũ: phải khớp hash hoặc có bản snapshot riêng.
 
-v0 hiện có bản sao chính xác từng byte của prompt/tools gốc trong ui_snapshots/v0/. .gitattributes tại ui_snapshots giữ nguyên byte khi commit, để không đổi hash do xuống dòng. Đây là snapshot thật của bộ khung; v1–v3 chưa có snapshot, vì vậy UI báo thiếu thay vì gắn nhãn mới lên prompt v0. Không sửa các snapshot cũ để làm khớp điểm đánh giá; cung cấp bản đã dùng khi chạy eval.
+ui_snapshots/ hiện chứa snapshot riêng cho cả v0–v3. v0 là bản sao bộ khung ban đầu. v1–v3 được phục hồi từ artifacts/prompts/v1.md, v2.md, v3.md và tools_v0-v3.yaml trong commit c46b5db; dùng xuống dòng CRLF của bản chạy trên Windows. SHA-256 của cả prompt và tools khớp chính xác với run đã đánh giá. .gitattributes tại ui_snapshots giữ nguyên byte khi commit, để không đổi hash do xuống dòng. Không sửa nội dung snapshot cũ để làm khớp điểm đánh giá; cung cấp bản đã dùng khi chạy eval.
 
 Mỗi phiên chat giữ cố định nội dung snapshot, hai hash, provider và model lúc tạo:
 
@@ -67,7 +67,7 @@ Mỗi phiên chat giữ cố định nội dung snapshot, hai hash, provider và
 
 “Công cụ và mô tả” liệt kê các tool có sẵn, tool mới trong khai báo/registry, compare_sources và các bonus tool. Trạng thái “Sẵn sàng” yêu cầu có cả khai báo trong snapshot đang chọn và implementation trong TOOL_FUNCTIONS. UI không tự thêm hoặc sửa tool của nhóm.
 
-compare_sources hiện được giới thiệu với đúng chức năng đối chiếu URL trùng và thống kê hostname, không chấm độ tin cậy. Khi nhóm tích hợp code + registry + khai báo vào snapshot thích hợp, nút thử sẽ tự bật sau khi khởi động lại server.
+compare_sources hiện đã có implementation và registry từ main, với chức năng đối chiếu URL trùng và thống kê hostname, không chấm độ tin cậy. Các snapshot base v0–v3 được đánh giá trước khi thêm tool này nên chưa khai báo compare_sources; danh sách sẽ hiển thị đúng trạng thái đó. Nút thử tự bật khi chọn snapshot có khai báo tương ứng. Không thêm tool vào snapshot cũ vì sẽ làm lệch hash so với run.
 
 Các nút policy, papers, paper_text, lookup, compare_sources, send gửi câu hỏi mẫu đến agent. Chúng không gọi thẳng tool; phần chi tiết cho biết model có chọn đúng tool hay không.
 

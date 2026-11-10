@@ -1,5 +1,6 @@
 """Simple live demo: python -m streamlit run app.py"""
 import json
+import hashlib
 from pathlib import Path
 
 import streamlit as st
@@ -27,9 +28,22 @@ with st.expander("Kết quả base eval: v0 → v3", expanded=True):
                 "Multi-turn": f"{summary['multiturn_accuracy']:.1%}",
             })
     st.dataframe(rows, hide_index=True, width="stretch")
-    st.caption("v2 đạt điểm cao nhất (19/20). Chat bên dưới dùng prompt hiện tại trong artifacts/system_prompt.md (v3).")
+    st.caption("v2 đạt điểm cao nhất (19/20). Bảng là kết quả eval đã lưu; chat live có thể khác giữa các lần chạy.")
+
+selected_version = st.selectbox("Chọn prompt để chat", ("v0", "v1", "v2", "v3"), index=2)
+prompt_path = ROOT / "artifacts" / "prompts" / f"{selected_version}.md"
+run_files = sorted((ROOT / "runs").glob(f"{selected_version}_B_base_openrouter_*.json"))
+run_info = json.loads(run_files[-1].read_text(encoding="utf-8"))
+if hashlib.sha256(prompt_path.read_bytes()).hexdigest() != run_info["prompt_hash"]:
+    st.error("Prompt snapshot không khớp run JSON của phiên bản này.")
+    st.stop()
+st.caption(f"Prompt {selected_version} đã khớp hash của run JSON. Tool gửi Telegram bị tắt trong UI demo.")
 
 if "history" not in st.session_state:
+    st.session_state.history = []
+    st.session_state.turns = []
+if st.session_state.get("active_version") != selected_version:
+    st.session_state.active_version = selected_version
     st.session_state.history = []
     st.session_state.turns = []
 
@@ -47,7 +61,7 @@ for turn in st.session_state.turns:
             st.json(turn["tools"])
 
 if question := st.chat_input("Ví dụ: Tóm tắt bài viết này giúp tôi"):
-    prompt = (ROOT / "artifacts/system_prompt.md").read_text(encoding="utf-8")
+    prompt = prompt_path.read_text(encoding="utf-8")
     declarations = load_tool_declarations(ROOT / "artifacts/tools.yaml")
     # The public demo only runs read/control tools; send requires a separate confirmation flow.
     tools = to_openai_tools([tool for tool in declarations if tool["name"] != "send"])

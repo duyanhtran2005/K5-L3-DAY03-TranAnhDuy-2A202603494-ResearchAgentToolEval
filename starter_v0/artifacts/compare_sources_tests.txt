@@ -1,0 +1,33 @@
+Offline verification evidence - compare_sources
+Client date: 2026-11-10 (Asia/Bangkok)
+Branch: tranduongtrungtinh_2A202603488
+Working directory: starter_v0
+
+Final branch scope:
+- New tool implementation, TOOL.md, registry entry and 31 offline test cases.
+- Tool-local declaration.yaml, eval_case.json and HANDOFF.md for integration owners.
+- Shared tools.yaml, eval_group.json, REPORT.md, system prompt and version log unchanged.
+
+Full test suite command:
+.\.venv\Scripts\python.exe -B -m pytest -q --capture=sys -p no:cacheprovider
+
+Observed output:
+93 passed, 17 skipped in 0.48s
+Exit code: 0
+
+The new tool contributes 31 passing test cases with no skips or failures.
+All 17 skips are unchanged starter TODO stubs in tests/test_tools_todo.py.
+
+Additional handoff verification:
+- declaration.yaml loads using the project's tool declaration loader and converts
+  to the provider tool schema.
+- Declared argument names match the registered implementation signature.
+- Calling the proposed eval_case.json arguments through TOOL_FUNCTIONS returns:
+  input_count=3, unique_count=2, duplicate_count=1.
+Observed result: Handoff declaration and eval sample: PASS
+Exit code: 0
+
+The coordinator must integrate declaration.yaml into artifacts/tools.yaml before
+the model can select compare_sources. The group-eval owner must integrate the
+proposed case into the team's 10-case suite and run the live provider evaluation.
+No live provider evaluation or external API calls were made in this contribution.

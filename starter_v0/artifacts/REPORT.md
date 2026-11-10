@@ -1,14 +1,10 @@
 # Day 03 Lab v2 Report — Research Agent
 
-> File này gồm 2 phần, deadline khác nhau:
-> - **PHẦN A — Giới thiệu agent**: ngắn gọn 1 trang để team khác hiểu nhanh agent có tool gì, làm được gì, thử bằng câu hỏi nào. **Xong trước 16:30** để làm tài liệu phụ trợ khi demo. Có thể làm thành poster HTML/SVG (`artifacts/poster.html` / `poster.svg`) để show cho team cùng zone.
-> - **PHẦN B — Chi tiết / Bằng chứng**: bảng đầy đủ (v0–v3, failure, eval, chat) dựa trên log thật. **Có thể hoàn thiện sau buổi debate để nộp bài.**
-
 ## Team
 
 - Team:
 - Members:
-- Provider/model:
+- Provider/model: Gemini / `gemini-3.5-flash`
 
 ---
 
@@ -16,33 +12,38 @@
 
 ## A1. Agent này làm được gì
 
-> 1–2 câu mô tả agent dùng để làm gì (cho team khác hiểu nhanh).
+Research Agent là trợ lý AI hỗ trợ tìm thông tin trên web và Twitter/X, đọc nội dung từ URL, và tổng hợp dữ liệu thành bản tin có liên kết nguồn. Bộ công cụ còn hỗ trợ tra cứu chính sách nội bộ, tìm và đọc bài báo arXiv, cùng chức năng gửi bản tin lên Telegram khi được người dùng xác nhận.
 
-Ví dụ: "Research agent: tìm tin theo từ khóa / theo tài khoản, đọc URL, tổng hợp thành digest, và gửi lên Telegram khi được xác nhận."
+**Trạng thái hiện tại:** đã kiểm tra thành công kết nối Gemini và khả năng tạo lời gọi tool `timeline`. Các chức năng dùng dịch vụ ngoài cần được cấu hình API tương ứng và kiểm thử thực tế; kết quả đánh giá sẽ được bổ sung ở Phần B.
 
 **Link dùng thử (deploy):**
 
-> Dán link public để team khác mở thử ngay. Cách deploy nhanh bằng Cloudflare Tunnel xem README. Nếu deploy Vercel/Streamlit Cloud thì dán link đó.
->
-> URL: 
+Chưa cung cấp; sẽ bổ sung URL sau khi triển khai giao diện demo.
 
 ## A2. Tool agent có
 
-> Liệt kê các tool agent đang dùng (gồm tool mới nhóm tự thêm). Mỗi tool 1 dòng: tên + làm được gì.
-
 | Tên tool | Làm được gì | Tool mới nhóm thêm? |
 |---|---|---|
-| clarify | hỏi lại người dùng khi thiếu thông tin | không |
-|  |  |  |
-|  |  |  |
+| `clarify` | Hỏi lại người dùng để bổ sung thông tin hoặc xác nhận yêu cầu. | Không |
+| `timeline` | Lấy các bài đăng gần đây của một tài khoản Twitter/X. | Không |
+| `social_search` | Tìm bài đăng Twitter/X theo từ khóa, ưu tiên mới nhất hoặc phổ biến. | Không |
+| `lookup` | Tìm thông tin trên web, hỗ trợ tìm tin tức theo khoảng thời gian. | Không |
+| `fetch` | Đọc nội dung của một URL để phục vụ việc tóm tắt và nghiên cứu. | Không |
+| `format` | Trình bày các dữ liệu đã có thành bản tin Markdown theo mẫu. | Không |
+| `send` | Gửi văn bản lên kênh Telegram đã cấu hình khi `confirmed=true`. | Không |
+| `policy` | Tìm thông tin trong bộ tài liệu chính sách nội bộ của bài lab. | Không |
+| `papers` | Tìm bài báo khoa học trên arXiv theo chủ đề. | Không |
+| `paper_text` | Tải PDF arXiv và trích xuất văn bản theo giới hạn trang, ký tự. | Không |
+
+Danh sách trên là các tool có sẵn, đã được khai báo và đăng ký trong bộ khung. Nhóm chưa bổ sung tool mới.
 
 ## A3. Câu hỏi mẫu để thử
 
-> 3–5 câu hỏi/yêu cầu mẫu để team khác tự thử agent ngay.
-
-1.
-2.
-3.
+1. **Tìm tin trên web:** “Tìm 5 tin tức AI nổi bật hôm nay, kèm liên kết nguồn.”
+2. **Đọc bài đăng theo tài khoản:** “Lấy 5 bài đăng mới nhất của tài khoản @sama trên Twitter/X.”
+3. **Tìm bài đăng theo chủ đề:** “Tìm 5 bài đăng phổ biến nhất về AI agents trên Twitter/X.”
+4. **Đọc URL:** “Đọc và tóm tắt trang https://www.python.org/about/ thành 3 ý chính.”
+5. **Thử tình huống thiếu thông tin:** “Lấy 5 bài đăng mới nhất giúp tôi.” Sau khi agent hỏi tài khoản, trả lời: “Tài khoản @sama.” Hành vi mong đợi là hỏi lại trước khi lấy dữ liệu.
 
 ---
 

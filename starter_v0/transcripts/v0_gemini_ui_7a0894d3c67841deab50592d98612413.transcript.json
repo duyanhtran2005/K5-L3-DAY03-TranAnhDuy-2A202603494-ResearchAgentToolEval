@@ -1,0 +1,179 @@
+{
+  "transcript_id": "v0_gemini_ui_7a0894d3c67841deab50592d98612413",
+  "version": "v0",
+  "artifact_version": "v0+peb1c8179815b+t5b22a2476d41",
+  "prompt_hash": "eb1c8179815bd79d34de7d326420bb99b3072e6e8ae96464c02d4411f905fc68",
+  "tools_hash": "5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "requested_model": "gemini-3.5-flash",
+  "actual_model": "gemini-3.6-flash",
+  "interface": "streamlit",
+  "ui_send_confirmation": true,
+  "system_prompt": "C:\\Users\\ThinkPad\\Downloads\\K5-L3-DAY03-TranAnhDuy-2A202603494-ResearchAgentToolEval\\starter_v0\\ui_snapshots\\v0\\system_prompt.md",
+  "tools": "C:\\Users\\ThinkPad\\Downloads\\K5-L3-DAY03-TranAnhDuy-2A202603494-ResearchAgentToolEval\\starter_v0\\ui_snapshots\\v0\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-11-10T14:29:48",
+  "updated_at": "2026-11-10T14:59:50",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-11-10T14:29:48",
+      "user": "nhiệt độ hôm nay là bao nhiêu độ",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": "Dịch vụ AI chưa xử lý được yêu cầu. Bạn có thể thử lại sau.",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [],
+      "status": "provider_error",
+      "assistant_text": "Dịch vụ AI chưa xử lý được yêu cầu. Bạn có thể thử lại sau.",
+      "actual_models": [],
+      "error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day limit exceeded on Free Tier. See https://aistudio.google.com/docs/rate-limits.\\nPlease retry in 30m7.754321899s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://aistudio.google.com/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'description': 'Generate content requests per day limit exceeded on Free Tier. See https://aistudio.google.com/docs/rate-limits.', 'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '1807s'}]}}",
+      "ui_provider_error": true,
+      "ended_at": "2026-11-10T14:29:51"
+    },
+    {
+      "turn_index": 2,
+      "started_at": "2026-11-10T14:59:34",
+      "user": "nhiệt độ hôm nay là bao nhiêu độ",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "lookup",
+              "args": {
+                "timeframe": "day",
+                "query": "nhiệt độ hôm nay Hà Nội"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "lookup",
+              "args": {
+                "timeframe": "day",
+                "query": "nhiệt độ hôm nay Hà Nội"
+              },
+              "result": {
+                "tool": "web_search",
+                "query": "nhiệt độ hôm nay Hà Nội",
+                "topic": "general",
+                "timeframe": "day",
+                "items": [
+                  {
+                    "title": "Dự báo thời tiết hôm nay 10/11 | Hà Nội trời rét, nhiệt độ tăng dần từ nay đến cuối tuần",
+                    "url": "https://www.youtube.com/watch?v=hpn9ekUlP_A",
+                    "source": "youtube.com",
+                    "summary": "### Transcript\n[0:01] Kính chào quý vị và các bạn. Thời tiết Hà Nội ngày hôm nay vẫn lạnh, thế nhưng mưa đã giảm ở nhiều khu vực. Ban ngày nhiều mây và đan sen với những khoảng nắng nhẹ. Sáng sớm nhiệt độ vẫn ở mức\n[0:10] thấp kết hợp với gió đông bắc cấp ba cấp b nên là trời vẫn khá lạnh. Nhiệt độ lúc này vào khoảng là 17 đến 18 độ và độ ẩm [...] # Dự báo thời tiết hôm nay 10/11 | Hà Nội trời rét, nhiệt độ tăng dần từ nay đến cuối tuần\n## Channel: HTV - Đài Hà Nội (verified)\n1.7M subscribers\n13 likes\n\n### Description\n529 views\nPosted: 2026-11-09\nHà Nội hôm nay vẫn rét, mưa giảm, nhiệt độ cao nhất khoảng 23 độ và dự báo tăng dần trong những ngày tới. Trong khi đó, khu vực Trung Bộ tiếp tục có mưa to đến rất to, lượng mưa phổ biến 70–150mm, cục bộ trên 250mm; nguy cơ ngập lụt vẫn ở mức cao sau nhiều ngày mưa lớn. [...] [0:44] Tối và đêm nay Hà Nội phổ biến nhiều mây ít mưa. Trời vẫn khá rét khi mà nhiệt độ giảm xuống còn 17 đến 18 độ. Vùng núi có nơi dưới 15 độ, độ ẩm là từ 86 đến 92%.\n[0:57] Dự báo từ nay đến cuối tuần Hà Nội có xu hướng tăng nhiệt, ban ngày có những khoảng nắng gián đoạn. Tối và đêm có thể xuất hiện mưa ở vài nơi nhưng không nắng\n[1:05] kể. Nhiệt độ dao động là 23 cho đến 28 độ và độ ẩm từ 68 đến 87%.",
+                    "score": 0.8646883
+                  },
+                  {
+                    "title": "Dự báo thời tiết Hà Nội 10 ngày tới rét nhất 16 độ C",
+                    "url": "https://laodong.vn/du-lich/cong-dong/du-bao-thoi-tiet-ha-noi-10-ngay-toi-ret-nhat-16-do-c-1797489.html",
+                    "source": "laodong.vn",
+                    "summary": "Theo tin thời tiết mới nhất từ Trung tâm Dự báo Khí tượng Thủy văn Quốc gia, không khí lạnh đã ảnh hưởng đến khu vực Tây Bắc Bộ, Bắc Trung Bộ và một số nơi ở Trung Trung Bộ.\n\nThời tiết Hà Nội hôm nay có mưa, nhiệt độ thấp nhất ở mức 15 - 16 độ C, độ ẩm 91%.\n\nTheo dự báo thời tiết 10 ngày tới của Trung tâm Dự báo khí tượng thủy văn quốc gia, Hà Nội có xu hướng tăng nhiệt từ ngày 10.11, mưa dông có khả năng xuất hiện trở lại vào ngày 12 - 13.11. [...] Cụ thể, ngày 10.11, Hà Nội nhiều mây, không mưa, nhiệt độ thấp nhất 17 độ C, cao nhất 23 độ C. Gió đông bắc tốc độ 3 m/s.\n\nNgày 11.11, thời tiết tiếp tục nhiều mây, không mưa. Nhiệt độ dao động 16 - 24 độ C, gió đông bắc tốc độ 1 m/s.\n\nĐến ngày 12.11, Hà Nội nhiều mây, có mưa dông. Nhiệt độ thấp nhất 16 độ C, cao nhất 23 độ C. Gió tây bắc tốc độ 3 m/s.\n\nNgày 13.11, khu vực Thủ đô tiếp tục nhiều mây, có mưa dông, nhiệt độ tăng lên 18 - 26 độ C. [...] Từ ngày 14.11, thời tiết Hà Nội có xu hướng khô ráo hơn.\n\nNgày 14.11, trời có mây, không mưa, nhiệt độ dao động 20 - 28 độ C.\n\nNgày 15.11, nhiệt độ tiếp tục tăng, thấp nhất 23 độ C, cao nhất 29 độ C. Trời có mây, không mưa.\n\nTrong hai ngày 16 - 17.11, Hà Nội có mây, không mưa. Nhiệt độ thấp nhất phổ biến 23 - 24 độ C, cao nhất khoảng 30 độ C.\n\nĐến ngày 18 - 19.11, nhiệt độ giảm nhẹ, dao động 21 - 27 độ C. Thời tiết có mây, không mưa.",
+                    "score": 0.8443195
+                  },
+                  {
+                    "title": "Thời tiết Hà Nội hôm nay - Dự báo thời tiết ngày mai và 7 ngày tới",
+                    "url": "https://baomoi.com/tien-ich-thoi-tiet-ha-noi.epi",
+                    "source": "baomoi.com",
+                    "summary": "### Dự báo thời tiết tối | 07/11/2026\n\n7333 liên quan\n\nTối và đêm nay, Hà Nội tiếp tục nhiều my, mưa rào và dông vẫn diễn ra ở nhiều khu vực, nhiệt độ giảm về mức 25 độ. Độ ẩm 86-95%.\n\n### Thời tiết hôm nay 8.11: Hà Nội cục bộ có nơi mưa to\n\n2152 liên quan\n\nTheo Trung tm Dự báo Khí tượng Thủy văn Quốc gia, ngày 8.11, Bắc Bộ có mưa rào và dông rải rác, cục bộ có nơi mưa to. Trung Bộ có mưa dông vài nơi. Riêng Nam Bộ có mưa rào và dông vài nơi, nhiệt độ cao nhất 34°C. [...] My rải rác\n\n15/11\n\n23° - 31°\n\nSáng nhiều my, chiều nắng ấm\n\nNguồn: weather.com\n\n## Chủ đề\n\n Tin bão mới nhất\n Tin không khí lạnh\n Tin áp thấp nhiệt đới\n\n## Tin tức thời tiết Hà Nộihôm nay\n\n### Dự báo thời tiết ngày 9/11: Hà Nội giảm nhiệt xuống 17 độ, mưa dông diện rộng\n\n4718 liên quan [...] 163 liên quan\n\nKhông khí lạnh đã tràn về trong đêm, sáng 9/11, thời tiết Hà Nội đã có sự thay đổi rõ rệt, ngoài trời lúc này đã cảm nhận được se se lạnh. Nhiệt độ hiện đang ở mức 17-19 độ, những cơn mưa rải rác vẫn xuất hiện ở một số nơi, độ ẩm khoảng 90%. Với sự thay đổi này thì một chiếc áo khoác mỏng được sử dụng khi ra đường trong sáng sớm nay là rất phù hợp.\n\n### Dự báo thời tiết tối | 08/11/2026\n\n163 liên quan",
+                    "score": 0.8306082
+                  },
+                  {
+                    "title": "Dự báo thời tiết hôm nay của 63 tỉnh - thành phố ở Việt Nam",
+                    "url": "https://thoitiet.vn/hom-nay",
+                    "source": "thoitiet.vn",
+                    "summary": "Thành phố của bạn:   Hà Nội   Thay đổi\n\nGiờ địa phương:  13:35 | 07/11/2026\n\n# Dự báo thời tiết hôm nay các Tỉnh/Thành phố\n\nMưa nhẹ\n\n###### Hà Nội\n\nMưa nhẹ\n\n### 29.7°C\n\n cảm thấy như  34.1°C Nhiều my\n\n###### Hà Giang\n\nNhiều my\n\n### 25.5°C\n\n cảm thấy như  25.7°C Nhiều my\n\n###### Cao Bằng\n\nNhiều my\n\n### 27.2°C\n\n cảm thấy như  29.8°C Mưa vừa\n\n###### Bắc Kạn\n\nMưa vừa\n\n### 25.8°C\n\n cảm thấy như  26.2°C Mưa nhẹ\n\n###### Tuyên Quang\n\nMưa nhẹ\n\n### 26.5°C\n\n cảm thấy như  26.1°C Nhiều my\n\n###### Lào Cai [...] ###### Bạc Liêu\n\nMưa nhẹ\n\n### 31.3°C\n\n cảm thấy như  37.2°C Mưa nhẹ\n\n###### Cà Mau\n\nMưa nhẹ\n\n### 31.1°C\n\n cảm thấy như  37.4°C\n\nHà Nội\n\nĐã cập nhật 26 phút trước\n\nMưa nhẹ 29.8°\n\nC\n\nF\n\nMưa nhẹ\n\nCảm giác như 34.8°.\n\n### Dự báo những ngày tới\n\nHôm nay Ngày mai 3 ngày 5 ngày\n\n7 ngày 10 ngày 15 ngày 30 ngày\n\n###### Mặt trời mọc/lặn\n\n06:02  17:18\n\n###### Thấp/Cao\n\n###### Độ ẩm\n\n###### Áp suất\n\n### 1016 mb\n\n###### Tầm nhìn\n\n### 10 km\n\n### 3.96 km/giờ\n\n###### Điểm ngưng\n\n### 23.9 °C [...] ###### Hải Phòng\n\nNhiều my\n\n### 29.9°C\n\n cảm thấy như  32.3°C Mưa nhẹ\n\n###### Hưng Yên\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  33.9°C Nhiều my\n\n###### Thái Bình\n\nNhiều my\n\n### 29.5°C\n\n cảm thấy như  33.7°C Nhiều my\n\n###### Hà Nam\n\nNhiều my\n\n### 29°C\n\n cảm thấy như  33.4°C Nhiều my\n\n###### Nam Định\n\nNhiều my\n\n### 30.9°C\n\n cảm thấy như  33.6°C Mưa nhẹ\n\n###### Ninh Bình\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  32.7°C Mưa nhẹ\n\n###### Thanh Hóa\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  33.9°C My cụm",
+                    "score": 0.72559077
+                  },
+                  {
+                    "title": "Dự báo thời tiết 10/11/2026: Không khí lạnh mạnh, miền Bắc rét",
+                    "url": "https://vietnamnet.vn/du-bao-thoi-tiet-10-11-2026-khong-khi-lanh-manh-mien-bac-ret-2572328.html",
+                    "source": "vietnamnet.vn",
+                    "summary": "Dự báo, trong hôm nay 10/11, không khí lạnh tiếp tục tràn su vào phía Nam. Ở Bắc Bộ, Thanh Hóa và Nghệ An có mưa vài nơi, duy trì trời rét, vùng núi cao Bắc Bộ có nơi rét đậm với nhiệt độ thấp nhất từ 15-18 độ, vùng núi cao có nơi dưới 12 độ.\n\n \n\nMiền Bắc chìm trong khối không khí lạnh, trời rét. Ảnh: Hoàng Minh\n\n \n\nRiêng thời tiết Hà Nội ngày 10/11, ảnh hưởng không khí lạnh, có mưa vài nơi, trời rét với nhiệt độ cao nhất tăng nhẹ, ở mức 21-23 độ.\n\n## Miền Trung vẫn mưa lớn [...] Trong mưa giông, khả năng cao xảy ra lốc, sét, mưa đá và gió gịt mạnh. Mưa lớn có khả năng gy ra tình trạng ngập úng tại các vùng trũng, thấp, khu đô thị, công nghiệp; lũ quét trên các sông, suối nhỏ, sạt lở đất trên sườn dốc.\n\nMiền Bắc chìm trong khối không khí lạnh mạnh, Hà Nội rét 16 độ\n\nKhông khí lạnh mạnh tràn xuống khiến miền Bắc chuyển rét, nhiệt độ nhiều nơi giảm su, Hà Nội thấp nhất 16 độ trong đêm nay. Trong khi đó, miền Trung tiếp tục hứng mưa lớn diện rộng, có nơi vượt 500mm.",
+                    "score": 0.6811549
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": "Dịch vụ AI chưa xử lý được yêu cầu. Bạn có thể thử lại sau.",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "lookup",
+          "args": {
+            "timeframe": "day",
+            "query": "nhiệt độ hôm nay Hà Nội"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "nhiệt độ hôm nay Hà Nội",
+            "topic": "general",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Dự báo thời tiết hôm nay 10/11 | Hà Nội trời rét, nhiệt độ tăng dần từ nay đến cuối tuần",
+                "url": "https://www.youtube.com/watch?v=hpn9ekUlP_A",
+                "source": "youtube.com",
+                "summary": "### Transcript\n[0:01] Kính chào quý vị và các bạn. Thời tiết Hà Nội ngày hôm nay vẫn lạnh, thế nhưng mưa đã giảm ở nhiều khu vực. Ban ngày nhiều mây và đan sen với những khoảng nắng nhẹ. Sáng sớm nhiệt độ vẫn ở mức\n[0:10] thấp kết hợp với gió đông bắc cấp ba cấp b nên là trời vẫn khá lạnh. Nhiệt độ lúc này vào khoảng là 17 đến 18 độ và độ ẩm [...] # Dự báo thời tiết hôm nay 10/11 | Hà Nội trời rét, nhiệt độ tăng dần từ nay đến cuối tuần\n## Channel: HTV - Đài Hà Nội (verified)\n1.7M subscribers\n13 likes\n\n### Description\n529 views\nPosted: 2026-11-09\nHà Nội hôm nay vẫn rét, mưa giảm, nhiệt độ cao nhất khoảng 23 độ và dự báo tăng dần trong những ngày tới. Trong khi đó, khu vực Trung Bộ tiếp tục có mưa to đến rất to, lượng mưa phổ biến 70–150mm, cục bộ trên 250mm; nguy cơ ngập lụt vẫn ở mức cao sau nhiều ngày mưa lớn. [...] [0:44] Tối và đêm nay Hà Nội phổ biến nhiều mây ít mưa. Trời vẫn khá rét khi mà nhiệt độ giảm xuống còn 17 đến 18 độ. Vùng núi có nơi dưới 15 độ, độ ẩm là từ 86 đến 92%.\n[0:57] Dự báo từ nay đến cuối tuần Hà Nội có xu hướng tăng nhiệt, ban ngày có những khoảng nắng gián đoạn. Tối và đêm có thể xuất hiện mưa ở vài nơi nhưng không nắng\n[1:05] kể. Nhiệt độ dao động là 23 cho đến 28 độ và độ ẩm từ 68 đến 87%.",
+                "score": 0.8646883
+              },
+              {
+                "title": "Dự báo thời tiết Hà Nội 10 ngày tới rét nhất 16 độ C",
+                "url": "https://laodong.vn/du-lich/cong-dong/du-bao-thoi-tiet-ha-noi-10-ngay-toi-ret-nhat-16-do-c-1797489.html",
+                "source": "laodong.vn",
+                "summary": "Theo tin thời tiết mới nhất từ Trung tâm Dự báo Khí tượng Thủy văn Quốc gia, không khí lạnh đã ảnh hưởng đến khu vực Tây Bắc Bộ, Bắc Trung Bộ và một số nơi ở Trung Trung Bộ.\n\nThời tiết Hà Nội hôm nay có mưa, nhiệt độ thấp nhất ở mức 15 - 16 độ C, độ ẩm 91%.\n\nTheo dự báo thời tiết 10 ngày tới của Trung tâm Dự báo khí tượng thủy văn quốc gia, Hà Nội có xu hướng tăng nhiệt từ ngày 10.11, mưa dông có khả năng xuất hiện trở lại vào ngày 12 - 13.11. [...] Cụ thể, ngày 10.11, Hà Nội nhiều mây, không mưa, nhiệt độ thấp nhất 17 độ C, cao nhất 23 độ C. Gió đông bắc tốc độ 3 m/s.\n\nNgày 11.11, thời tiết tiếp tục nhiều mây, không mưa. Nhiệt độ dao động 16 - 24 độ C, gió đông bắc tốc độ 1 m/s.\n\nĐến ngày 12.11, Hà Nội nhiều mây, có mưa dông. Nhiệt độ thấp nhất 16 độ C, cao nhất 23 độ C. Gió tây bắc tốc độ 3 m/s.\n\nNgày 13.11, khu vực Thủ đô tiếp tục nhiều mây, có mưa dông, nhiệt độ tăng lên 18 - 26 độ C. [...] Từ ngày 14.11, thời tiết Hà Nội có xu hướng khô ráo hơn.\n\nNgày 14.11, trời có mây, không mưa, nhiệt độ dao động 20 - 28 độ C.\n\nNgày 15.11, nhiệt độ tiếp tục tăng, thấp nhất 23 độ C, cao nhất 29 độ C. Trời có mây, không mưa.\n\nTrong hai ngày 16 - 17.11, Hà Nội có mây, không mưa. Nhiệt độ thấp nhất phổ biến 23 - 24 độ C, cao nhất khoảng 30 độ C.\n\nĐến ngày 18 - 19.11, nhiệt độ giảm nhẹ, dao động 21 - 27 độ C. Thời tiết có mây, không mưa.",
+                "score": 0.8443195
+              },
+              {
+                "title": "Thời tiết Hà Nội hôm nay - Dự báo thời tiết ngày mai và 7 ngày tới",
+                "url": "https://baomoi.com/tien-ich-thoi-tiet-ha-noi.epi",
+                "source": "baomoi.com",
+                "summary": "### Dự báo thời tiết tối | 07/11/2026\n\n7333 liên quan\n\nTối và đêm nay, Hà Nội tiếp tục nhiều my, mưa rào và dông vẫn diễn ra ở nhiều khu vực, nhiệt độ giảm về mức 25 độ. Độ ẩm 86-95%.\n\n### Thời tiết hôm nay 8.11: Hà Nội cục bộ có nơi mưa to\n\n2152 liên quan\n\nTheo Trung tm Dự báo Khí tượng Thủy văn Quốc gia, ngày 8.11, Bắc Bộ có mưa rào và dông rải rác, cục bộ có nơi mưa to. Trung Bộ có mưa dông vài nơi. Riêng Nam Bộ có mưa rào và dông vài nơi, nhiệt độ cao nhất 34°C. [...] My rải rác\n\n15/11\n\n23° - 31°\n\nSáng nhiều my, chiều nắng ấm\n\nNguồn: weather.com\n\n## Chủ đề\n\n Tin bão mới nhất\n Tin không khí lạnh\n Tin áp thấp nhiệt đới\n\n## Tin tức thời tiết Hà Nộihôm nay\n\n### Dự báo thời tiết ngày 9/11: Hà Nội giảm nhiệt xuống 17 độ, mưa dông diện rộng\n\n4718 liên quan [...] 163 liên quan\n\nKhông khí lạnh đã tràn về trong đêm, sáng 9/11, thời tiết Hà Nội đã có sự thay đổi rõ rệt, ngoài trời lúc này đã cảm nhận được se se lạnh. Nhiệt độ hiện đang ở mức 17-19 độ, những cơn mưa rải rác vẫn xuất hiện ở một số nơi, độ ẩm khoảng 90%. Với sự thay đổi này thì một chiếc áo khoác mỏng được sử dụng khi ra đường trong sáng sớm nay là rất phù hợp.\n\n### Dự báo thời tiết tối | 08/11/2026\n\n163 liên quan",
+                "score": 0.8306082
+              },
+              {
+                "title": "Dự báo thời tiết hôm nay của 63 tỉnh - thành phố ở Việt Nam",
+                "url": "https://thoitiet.vn/hom-nay",
+                "source": "thoitiet.vn",
+                "summary": "Thành phố của bạn:   Hà Nội   Thay đổi\n\nGiờ địa phương:  13:35 | 07/11/2026\n\n# Dự báo thời tiết hôm nay các Tỉnh/Thành phố\n\nMưa nhẹ\n\n###### Hà Nội\n\nMưa nhẹ\n\n### 29.7°C\n\n cảm thấy như  34.1°C Nhiều my\n\n###### Hà Giang\n\nNhiều my\n\n### 25.5°C\n\n cảm thấy như  25.7°C Nhiều my\n\n###### Cao Bằng\n\nNhiều my\n\n### 27.2°C\n\n cảm thấy như  29.8°C Mưa vừa\n\n###### Bắc Kạn\n\nMưa vừa\n\n### 25.8°C\n\n cảm thấy như  26.2°C Mưa nhẹ\n\n###### Tuyên Quang\n\nMưa nhẹ\n\n### 26.5°C\n\n cảm thấy như  26.1°C Nhiều my\n\n###### Lào Cai [...] ###### Bạc Liêu\n\nMưa nhẹ\n\n### 31.3°C\n\n cảm thấy như  37.2°C Mưa nhẹ\n\n###### Cà Mau\n\nMưa nhẹ\n\n### 31.1°C\n\n cảm thấy như  37.4°C\n\nHà Nội\n\nĐã cập nhật 26 phút trước\n\nMưa nhẹ 29.8°\n\nC\n\nF\n\nMưa nhẹ\n\nCảm giác như 34.8°.\n\n### Dự báo những ngày tới\n\nHôm nay Ngày mai 3 ngày 5 ngày\n\n7 ngày 10 ngày 15 ngày 30 ngày\n\n###### Mặt trời mọc/lặn\n\n06:02  17:18\n\n###### Thấp/Cao\n\n###### Độ ẩm\n\n###### Áp suất\n\n### 1016 mb\n\n###### Tầm nhìn\n\n### 10 km\n\n### 3.96 km/giờ\n\n###### Điểm ngưng\n\n### 23.9 °C [...] ###### Hải Phòng\n\nNhiều my\n\n### 29.9°C\n\n cảm thấy như  32.3°C Mưa nhẹ\n\n###### Hưng Yên\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  33.9°C Nhiều my\n\n###### Thái Bình\n\nNhiều my\n\n### 29.5°C\n\n cảm thấy như  33.7°C Nhiều my\n\n###### Hà Nam\n\nNhiều my\n\n### 29°C\n\n cảm thấy như  33.4°C Nhiều my\n\n###### Nam Định\n\nNhiều my\n\n### 30.9°C\n\n cảm thấy như  33.6°C Mưa nhẹ\n\n###### Ninh Bình\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  32.7°C Mưa nhẹ\n\n###### Thanh Hóa\n\nMưa nhẹ\n\n### 30.6°C\n\n cảm thấy như  33.9°C My cụm",
+                "score": 0.72559077
+              },
+              {
+                "title": "Dự báo thời tiết 10/11/2026: Không khí lạnh mạnh, miền Bắc rét",
+                "url": "https://vietnamnet.vn/du-bao-thoi-tiet-10-11-2026-khong-khi-lanh-manh-mien-bac-ret-2572328.html",
+                "source": "vietnamnet.vn",
+                "summary": "Dự báo, trong hôm nay 10/11, không khí lạnh tiếp tục tràn su vào phía Nam. Ở Bắc Bộ, Thanh Hóa và Nghệ An có mưa vài nơi, duy trì trời rét, vùng núi cao Bắc Bộ có nơi rét đậm với nhiệt độ thấp nhất từ 15-18 độ, vùng núi cao có nơi dưới 12 độ.\n\n \n\nMiền Bắc chìm trong khối không khí lạnh, trời rét. Ảnh: Hoàng Minh\n\n \n\nRiêng thời tiết Hà Nội ngày 10/11, ảnh hưởng không khí lạnh, có mưa vài nơi, trời rét với nhiệt độ cao nhất tăng nhẹ, ở mức 21-23 độ.\n\n## Miền Trung vẫn mưa lớn [...] Trong mưa giông, khả năng cao xảy ra lốc, sét, mưa đá và gió gịt mạnh. Mưa lớn có khả năng gy ra tình trạng ngập úng tại các vùng trũng, thấp, khu đô thị, công nghiệp; lũ quét trên các sông, suối nhỏ, sạt lở đất trên sườn dốc.\n\nMiền Bắc chìm trong khối không khí lạnh mạnh, Hà Nội rét 16 độ\n\nKhông khí lạnh mạnh tràn xuống khiến miền Bắc chuyển rét, nhiệt độ nhiều nơi giảm su, Hà Nội thấp nhất 16 độ trong đêm nay. Trong khi đó, miền Trung tiếp tục hứng mưa lớn diện rộng, có nơi vượt 500mm.",
+                "score": 0.6811549
+              }
+            ]
+          }
+        }
+      ],
+      "status": "provider_error",
+      "assistant_text": "Dịch vụ AI chưa xử lý được yêu cầu. Bạn có thể thử lại sau.",
+      "actual_models": [
+        "gemini-3.6-flash"
+      ],
+      "error": "ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash, description: Generate content requests per day limit exceeded on Free Tier. See https://aistudio.google.com/docs/rate-limits.\\nPlease retry in 8.924032931s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://aistudio.google.com/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'description': 'Generate content requests per day limit exceeded on Free Tier. See https://aistudio.google.com/docs/rate-limits.', 'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '8s'}]}}",
+      "ui_provider_error": true,
+      "ended_at": "2026-11-10T14:59:50"
+    }
+  ]
+}

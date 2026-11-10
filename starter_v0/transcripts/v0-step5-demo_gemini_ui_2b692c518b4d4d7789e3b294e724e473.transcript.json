@@ -1,0 +1,30 @@
+{
+  "transcript_id": "v0-step5-demo_gemini_ui_2b692c518b4d4d7789e3b294e724e473",
+  "version": "v0-step5-demo",
+  "artifact_version": "v0-step5-demo+peb1c8179815b+t5b22a2476d41",
+  "prompt_hash": "eb1c8179815bd79d34de7d326420bb99b3072e6e8ae96464c02d4411f905fc68",
+  "tools_hash": "5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "interface": "streamlit",
+  "ui_send_confirmation": true,
+  "system_prompt": "C:\\Users\\ThinkPad\\Downloads\\K5-L3-DAY03-TranAnhDuy-2A202603494-ResearchAgentToolEval\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\ThinkPad\\Downloads\\K5-L3-DAY03-TranAnhDuy-2A202603494-ResearchAgentToolEval\\starter_v0\\artifacts\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-11-10T11:15:14",
+  "updated_at": "2026-11-10T11:15:36",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-11-10T11:15:14",
+      "user": "Tìm 2 tin tức AI nổi bật hôm nay, kèm liên kết nguồn.",
+      "rounds": [],
+      "tool_events": [],
+      "status": "provider_error",
+      "assistant_text": "Không thể hoàn thành yêu cầu lúc này.",
+      "error": "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
+      "ended_at": "2026-11-10T11:15:36"
+    }
+  ]
+}

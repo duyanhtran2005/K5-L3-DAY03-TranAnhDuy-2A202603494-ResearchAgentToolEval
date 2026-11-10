@@ -1,0 +1,30 @@
+{
+  "id": "G_compare_sources_existing_items",
+  "phase": "B",
+  "query": "Compare these already-collected sources: remove repeated URLs and count unique URLs per hostname. Return at most 2 unique items. Items: [{\"url\":\"https://example.com/a#intro\"},{\"url\":\"https://example.com/a#results\"},{\"url\":\"https://other.org/b\"}]. Do not search the web or fetch the pages.",
+  "failure_type": "wrong_tool",
+  "expect": {
+    "tool_calls": [
+      {
+        "name": "compare_sources",
+        "args": {
+          "items": [
+            {
+              "url": "https://example.com/a#intro"
+            },
+            {
+              "url": "https://example.com/a#results"
+            },
+            {
+              "url": "https://other.org/b"
+            }
+          ],
+          "max_items": 2
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "what_it_tests": "Route comparison of existing URLs to compare_sources rather than lookup, fetch, or format; preserve supplied URLs and explicit output limit."
+  }
+}

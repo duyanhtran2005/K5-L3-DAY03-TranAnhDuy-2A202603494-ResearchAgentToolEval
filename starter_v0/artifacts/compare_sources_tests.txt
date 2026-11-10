@@ -1,3 +1,7 @@
+Historical verification before the TODO challenge.
+Latest full-suite result: 128 passed, 0 failed, 0 skipped.
+See artifacts/tool_test_challenge.md for current evidence and bug fixes.
+
 Offline verification evidence - compare_sources
 Client date: 2026-11-10 (Asia/Bangkok)
 Branch: tranduongtrungtinh_2A202603488

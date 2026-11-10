@@ -40,11 +40,14 @@ def _tweet_item(raw: dict[str, Any]) -> dict[str, Any]:
 def _tweets_from(data: dict[str, Any], limit: int) -> list[dict[str, Any]]:
     raw_items = data.get("timeline") or data.get("tweets") or []
     items = [_tweet_item(item) for item in raw_items if item.get("tweet_id") or item.get("id")]
-    return items[: int(limit or 5)]
+    return items[:limit]
 
 
 def get_user_tweets(screenname: str = "", limit: int = 5) -> dict[str, Any]:
     try:
+        limit = int(limit)
+        if limit < 1:
+            raise ValueError("limit must be a positive integer")
         data = _twitter_get("/timeline.php", {"screenname": screenname})
         return {"tool": "get_user_tweets", "screenname": screenname, "items": _tweets_from(data, limit)}
     except Exception as exc:

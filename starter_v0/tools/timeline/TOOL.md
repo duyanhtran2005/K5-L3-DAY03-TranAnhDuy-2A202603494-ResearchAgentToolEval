@@ -12,3 +12,8 @@ side_effect: false
 
 Fetches recent posts from a single account. `screenname` is an account handle
 without `@`.
+
+## Input boundary regression
+
+limit must be positive. Zero and negative values return a ValueError dictionary
+before HTTP; integer strings such as "3" remain supported.

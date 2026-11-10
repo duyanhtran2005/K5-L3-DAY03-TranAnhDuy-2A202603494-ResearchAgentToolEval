@@ -32,12 +32,14 @@ with st.expander("Kết quả base eval: v0 → v3", expanded=True):
 
 selected_version = st.selectbox("Chọn prompt để chat", ("v0", "v1", "v2", "v3"), index=2)
 prompt_path = ROOT / "artifacts" / "prompts" / f"{selected_version}.md"
+tools_path = ROOT / "artifacts" / "prompts" / "tools_v0-v3.yaml"
 run_files = sorted((ROOT / "runs").glob(f"{selected_version}_B_base_openrouter_*.json"))
 run_info = json.loads(run_files[-1].read_text(encoding="utf-8"))
-if hashlib.sha256(prompt_path.read_bytes()).hexdigest() != run_info["prompt_hash"]:
-    st.error("Prompt snapshot không khớp run JSON của phiên bản này.")
+if (hashlib.sha256(prompt_path.read_bytes()).hexdigest() != run_info["prompt_hash"]
+        or hashlib.sha256(tools_path.read_bytes()).hexdigest() != run_info["tools_hash"]):
+    st.error("Prompt hoặc tool snapshot không khớp run JSON của phiên bản này.")
     st.stop()
-st.caption(f"Prompt {selected_version} đã khớp hash của run JSON. Tool gửi Telegram bị tắt trong UI demo.")
+st.caption(f"Prompt và tool declaration {selected_version} đã khớp hash run JSON. Tool gửi Telegram bị tắt trong UI demo.")
 
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -62,7 +64,7 @@ for turn in st.session_state.turns:
 
 if question := st.chat_input("Ví dụ: Tóm tắt bài viết này giúp tôi"):
     prompt = prompt_path.read_text(encoding="utf-8")
-    declarations = load_tool_declarations(ROOT / "artifacts/tools.yaml")
+    declarations = load_tool_declarations(tools_path)
     # The public demo only runs read/control tools; send requires a separate confirmation flow.
     tools = to_openai_tools([tool for tool in declarations if tool["name"] != "send"])
     messages = [{"role": "system", "content": prompt}, *st.session_state.history,
